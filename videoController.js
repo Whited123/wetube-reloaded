@@ -1,4 +1,4 @@
-export const trending = (req, res) => res.send("환영합니다.");
+export const trending = (req, res) => res.render("home");
 export const see = (req, res) => {
   return res.send(`즐감 ㅋㅋ #${req.params.id}`);
 };
