@@ -1,9 +1,10 @@
-extends base.pug
+extends base
+include mixins/video
 
 block content
     h2 웨튜브의 인기 급 상승 동영상을 만나보세요.
     ul 
-        each video in videos 
-            li=video
+        each video in videos
+            +video(video) 
         else 
-            li 대신 인기 많은 "동영"상을 보여드리겠읍니다. ㅋㅋ
+            li 대신 인기 급 상승 "동영"상을 보여드리겠읍니다. ㅋㅋ        
