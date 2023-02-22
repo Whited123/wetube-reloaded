@@ -1,4 +1,7 @@
 extends base.pug
 
 block content
-    h1 동영상 고치기
+    h4 동영상 제목 수정하기
+        form(method="POST")
+            input(name="title", placeholder="Video Title", value=video.title, required)
+            input(value="Save",type="submit") 

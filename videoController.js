@@ -31,9 +31,11 @@ export const trending = (req, res) => {
 export const watch = (req, res) => {
   const { id } = req.params;
   const video = videos[id - 1];
-  return res.render("watch", { titlePage: `Watching ${video.title}` }, video);
+  return res.render("watch", { titlePage: `Watching: ${video.title}`, video });
 };
-export const edit = (req, res) => res.render("edit");
-export const search = (req, res) => res.send("설치");
-export const upload = (req, res) => res.send("올리기");
-export const deleteVideo = (req, res) => res.send("내리기");
+export const getEdit = (req, res) => {
+  const { id } = req.params;
+  const video = videos[id - 1];
+  return res.render("edit", { titlePage: `Editing: ${video.title}`, video });
+};
+export const postEdit = (req, res) => {};
