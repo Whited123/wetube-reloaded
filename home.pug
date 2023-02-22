@@ -1,4 +1,9 @@
 extends base.pug
 
 block content
-    h1 웨튜브에 오신 것을 환영합니다.
+    h2 웨튜브의 인기 급 상승 동영상을 만나보세요.
+    ul 
+        each video in videos 
+            li=video
+        else 
+            li 대신 인기 많은 "동영"상을 보여드리겠읍니다. ㅋㅋ
