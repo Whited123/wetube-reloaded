@@ -1,8 +1,11 @@
 import Video from "../models/Video";
 
 export const home = (req, res) => {
-  Video.find({}, (error, videos) => {});
-  return res.render("home", { titlePage: "Home" });
+  console.log("시작");
+  Video.find({}, (error, videos) => {
+    console.log("검색 끝");
+    return res.render("home", { titlePage: "Home", videos });
+  });
 };
 export const watch = (req, res) => {
   const { id } = req.params;
