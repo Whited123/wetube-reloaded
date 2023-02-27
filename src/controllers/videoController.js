@@ -45,16 +45,15 @@ export const postEdit = async (req, res) => {
 export const getUpload = (req, res) => {
   return res.render("upload", { titlePage: "Upload Video" });
 };
+
 export const postUpload = async (req, res) => {
+  const { title, description, hashtags } = req.body;
   try {
-    const { title, description, hashtags } = req.body;
-    const video = new Video({
+    await Video.create({
       title,
       description,
-      createdAt: Date.now(),
-      hashtags: hashtags.split(",").map((word) => `#${word}`),
+      hashtags,
     });
-    await video.save();
     return res.redirect("/");
   } catch (error) {
     return res.render("upload", {
