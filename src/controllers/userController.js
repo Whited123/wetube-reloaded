@@ -1,6 +1,7 @@
 import User from "../models/User";
 
 export const getJoin = (req, res) => res.render("join", { pageTitle: "Join" });
+
 export const postJoin = async (req, res) => {
   const { email, username, password, password2, name, location } = req.body;
   const pageTitle = "Join";
@@ -17,17 +18,37 @@ export const postJoin = async (req, res) => {
       errorMessage: "이 이메일/유저 네임은 이미 사용 중 입니다 !!!",
     });
   }
-  await User.create({
-    email,
-    username,
-    password,
-    name,
-    location,
-  });
-  return res.redirect("/login");
+  try {
+    await User.create({
+      email,
+      username,
+      password,
+      name,
+      location,
+    });
+    return res.redirect("/login");
+  } catch (error) {
+    return res.status(400).render("join", {
+      pageTitle: "Join",
+      errorMessage: error._message,
+    });
+  }
+};
+
+export const getLogin = (req, res) =>
+  res.render("login", { pageTitle: "Login" });
+export const postLogin = async (req, res) => {
+  const { username, password } = req.body;
+  const exists = await User.exists({ username });
+  if (!exists) {
+    return res.status(400).render("login", {
+      pageTitle: "Login",
+      errorMessage:
+        "존재하지 않는 아이디/비밀 번호 입니다. 다시 확인 해주세요.",
+    });
+  }
 };
 export const edit = (req, res) => res.send("계정 정보 수정");
 export const remove = (req, res) => res.send("계삭 ㅋㅋ");
-export const login = (req, res) => res.send("로그인 ㅋㅋ");
 export const logout = (req, res) => res.send("로그아웃 ㅋㅋ");
 export const see = (req, res) => res.send("보기");
