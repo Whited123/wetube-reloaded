@@ -38,6 +38,7 @@ export const postJoin = async (req, res) => {
 
 export const getLogin = (req, res) =>
   res.render("login", { pageTitle: "Login" });
+
 export const postLogin = async (req, res) => {
   const { username, password } = req.body;
   const pageTitle = "Login";
@@ -60,6 +61,7 @@ export const postLogin = async (req, res) => {
   req.session.user = user;
   return res.redirect("/");
 };
+
 export const edit = (req, res) => res.send("계정 정보 수정");
 export const remove = (req, res) => res.send("계삭 ㅋㅋ");
 export const logout = (req, res) => res.send("로그아웃 ㅋㅋ");
