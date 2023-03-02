@@ -1,4 +1,5 @@
 import User from "../models/User";
+import bcrypt from "bcrypt";
 
 export const getJoin = (req, res) => res.render("join", { pageTitle: "Join" });
 
@@ -39,14 +40,23 @@ export const getLogin = (req, res) =>
   res.render("login", { pageTitle: "Login" });
 export const postLogin = async (req, res) => {
   const { username, password } = req.body;
-  const exists = await User.exists({ username });
-  if (!exists) {
+  const pageTitle = "Login";
+  const user = await User.findOne({ username });
+  if (!user) {
     return res.status(400).render("login", {
-      pageTitle: "Login",
+      pageTitle,
       errorMessage:
         "존재하지 않는 아이디/비밀 번호 입니다. 다시 확인 해주세요.",
     });
   }
+  const ok = await bcrypt.compare(password, user.password);
+  if (!ok) {
+    return res.status(400).render("login", {
+      pageTitle,
+      errorMessage: "비밀 번호 오류, 다시 입력 해주세요.",
+    });
+  }
+  return res.redirect("/");
 };
 export const edit = (req, res) => res.send("계정 정보 수정");
 export const remove = (req, res) => res.send("계삭 ㅋㅋ");
