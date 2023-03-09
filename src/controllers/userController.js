@@ -202,4 +202,14 @@ export const postChangePassword = async (req, res) => {
   return res.redirect("/");
 };
 
-export const see = (req, res) => res.send("보기");
+export const see = async (req, res) => {
+  const { id } = req.params;
+  const user = await User.findById(id);
+  if (!user) {
+    return res.status(400).render("404", { pageTitle: "유저가 없습니다." });
+  }
+  return res.render("users/profile", {
+    pageTitle: user.name,
+    user,
+  });
+};
