@@ -74,7 +74,6 @@ export const startGithubLogin = (req, res) => {
   const finalUrl = `${baseUrl}?${params}`;
   return res.redirect(finalUrl);
 };
-
 export const finishGithubLogin = async (req, res) => {
   const baseUrl = "https://github.com/login/oauth/access_token";
   const config = {
@@ -109,7 +108,6 @@ export const finishGithubLogin = async (req, res) => {
         },
       })
     ).json();
-    console.log(emailData);
     const emailObj = emailData.find(
       (email) => email.primary === true && email.verified === true
     );
@@ -118,9 +116,9 @@ export const finishGithubLogin = async (req, res) => {
     }
     let user = await User.findOne({ email: emailObj.email });
     if (!user) {
-      const user = await User.create({
+      user = await User.create({
+        avatarUrl: userData.avatar_url,
         name: userData.name,
-        avatarUrl: userData.avatar_Url,
         username: userData.login,
         email: emailObj.email,
         password: "",
@@ -140,6 +138,7 @@ export const logout = (req, res) => {
   req.session.destroy();
   return res.redirect("/");
 };
+
 export const getEdit = (req, res) => {
   return res.render("edit-profile", { pageTitle: "Edit Profile" });
 };
@@ -147,12 +146,11 @@ export const getEdit = (req, res) => {
 export const postEdit = async (req, res) => {
   const {
     session: {
-      user: { _id },
+      user: { _id, avatarUrl },
     },
     body: { name, email, username, location },
     file,
   } = req;
-  console.log(file);
   const updatedUser = await User.findByIdAndUpdate(
     _id,
     {
@@ -170,7 +168,7 @@ export const postEdit = async (req, res) => {
 
 export const getChangePassword = (req, res) => {
   if (req.session.user.socialOnly === true) {
-    return res.render("/");
+    return res.redirect("/");
   }
   return res.render("users/change-password", { pageTitle: "Change Password" });
 };
@@ -178,35 +176,34 @@ export const getChangePassword = (req, res) => {
 export const postChangePassword = async (req, res) => {
   const {
     session: {
-      user: { _id, password },
+      user: { _id },
     },
-    body: { oldPassword, newPassword, newPassword1 },
+    body: { oldPassword, newPassword, newPasswordConfirmation },
   } = req;
-  const ok = await bcrypt.compare(oldPassword, password);
+  const user = await User.findById(_id);
+  const ok = await bcrypt.compare(oldPassword, user.password);
   if (!ok) {
     return res.status(400).render("users/change-password", {
       pageTitle: "Change Password",
-      errorMessage: "비밀번호가 일치하지 않습니다.",
+      errorMessage: "The current password is incorrect",
     });
   }
-  if (newPassword !== newPassword1) {
+  if (newPassword !== newPasswordConfirmation) {
     return res.status(400).render("users/change-password", {
       pageTitle: "Change Password",
-      errorMessage: "비밀번호가 일치하지 않습니다.",
+      errorMessage: "The password does not match the confirmation",
     });
   }
-  const user = await User.findById(_id);
   user.password = newPassword;
   await user.save();
-  req.session.user.password = user.password;
-  return res.redirect("/");
+  return res.redirect("/users/logout");
 };
 
 export const see = async (req, res) => {
   const { id } = req.params;
   const user = await User.findById(id);
   if (!user) {
-    return res.status(400).render("404", { pageTitle: "유저가 없습니다." });
+    return res.status(404).render("404", { pageTitle: "User not found." });
   }
   return res.render("users/profile", {
     pageTitle: user.name,
