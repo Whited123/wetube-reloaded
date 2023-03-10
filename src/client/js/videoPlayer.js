@@ -6,13 +6,14 @@ const volume = document.getElementById("volume");
 
 const handlePlayClick = (e) => {
   if (video.paused) {
+    playBtn.innerText = "pause";
     video.play();
   } else {
     video.pause();
   }
 };
+
 const handlePause = () => (playBtn.innerText = "Play");
-const handlePlay = () => (playBtn.innerText = "Pause");
 
 const handleMute = (e) => {};
 

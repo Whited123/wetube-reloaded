@@ -10,7 +10,7 @@
     "dev:server": "nodemon",
     "dev:assets": "webpack"
   },
-  "author": "",
+  "author": "KDY",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/Whited123/wetube-reloaded/issues"
