@@ -8,10 +8,10 @@ primary_region = "nrt"
 processes = []
 
 [env]
-  PORT = "8080"
+  PORT = "4640"
 
 [[services]]
-  internal_port = 8080
+  internal_port = 4640
   processes = ["app"]
   protocol = "tcp"
   [services.concurrency]
